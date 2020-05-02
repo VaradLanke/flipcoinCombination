@@ -2,27 +2,54 @@
 hcount=0
 tcount=0
 declare -A singlet
+declare -A doublet
 singlet=([H]=0 [T]=0)
+doublet=([HH]=0 [HT]=0 [TH]=0 [TT]=0)
 echo "Wecome to FlipCoin Combination Program"
 function singletheadTailGenerate(){
-	rn=$((RANDOM%2))
-       	if [ $rn -eq 0 ]
-       	then
-              	tcount=$(($tcount+1))
-       	else
-               	hcount=$(($hcount+1))
-       	fi
-}
-
-function singletCombination(){	
-	while [ $hcount -ne 21 -a $tcount -ne 21 ]
+echo "------Singlet Combination-------"
+	while [ ${singlet[H]} -ne 21 -a ${singlet[H]} -ne 21 ]
 	do
-		singletheadTailGenerate
+		rn=$((RANDOM%2))
+       		if [ $rn -eq 0 ]
+       		then
+			singlet[T]=$((singlet[T] + 1))
+       		else
+			singlet[H]=$((singlet[H] + 1))
+       		fi
 	done
-	singlet[H]=$hcount
-	singlet[T]=$tcount
-}
-singletCombination
 echo "${singlet[@]} total = $((singlet[H] + singlet[T]))"
 echo "H % = $(( (singlet[H] * 100 )/ (singlet[H] + singlet[T]) ))"
 echo "T % = $(( (singlet[T] * 100 )/ (singlet[H] + singlet[T]) ))"
+}
+
+#singletheadTailGenerate
+
+function doubletheadTailGenerate(){
+echo "------Doublet Combination-------"
+	while [ ${doublet[HH]} -ne 21 -a ${doublet[HT]} -ne 21 -a ${doublet[TH]} -ne 21 -a ${doublet[TT]} -ne 21 ]
+	do
+		rn1=$((RANDOM%2))
+		rn2=$((RANDOM%2))
+       		if [ $rn1 -eq 0 -a $rn2 -eq 0 ]
+       		then
+			doublet[TT]=$((doublet[TT] + 1))
+       		elif [ $rn1 -eq 0 -a $rn2 -eq 1 ]
+		then
+			doublet[TH]=$((doublet[TH] + 1))
+       		elif [ $rn1 -eq 1 -a $rn2 -eq 0 ]
+		then
+			doublet[HT]=$((doublet[HT] + 1))
+       		elif [ $rn1 -eq 1 -a $rn2 -eq 1 ]
+		then
+			doublet[HH]=$((doublet[HH] + 1))
+       		fi
+	done
+dtotal=$((doublet[HH] + doublet[HT] + doublet[TH] + doublet[TT]))
+echo "${doublet[@]} total = $dtotal"
+echo "HH % = $(( (${doublet[HH]} * 100 ) / $dtotal ))"
+echo "HT % = $(( (${doublet[HT]} * 100 ) / $dtotal))"
+echo "TH % = $(( (${doublet[TH]} * 100 ) / $dtotal))"
+echo "TT % = $(( (${doublet[TT]} * 100 ) / $dtotal))"
+}
+doubletheadTailGenerate
