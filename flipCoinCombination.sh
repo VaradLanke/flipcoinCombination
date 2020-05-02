@@ -7,7 +7,8 @@ declare -A triplet
 singlet=([H]=0 [T]=0)
 doublet=([HH]=0 [HT]=0 [TH]=0 [TT]=0)
 triplet=([HHH]=0 [HHT]=0 [HTH]=0 [THH]=0 [TTH]=0 [THT]=0 [HTT]=0 [TTT]=0)
-echo "Wecome to FlipCoin Combination Program"
+echo "Welcome to FlipCoin Combination Program"
+
 function singletheadTailGenerate(){
 echo "------Singlet Combination-------"
 	while [ ${singlet[H]} -ne 21 -a ${singlet[H]} -ne 21 ]
@@ -20,12 +21,10 @@ echo "------Singlet Combination-------"
 			singlet[H]=$((singlet[H] + 1))
        		fi
 	done
-echo "${singlet[@]} total = $((singlet[H] + singlet[T]))"
+echo "${singlet[@]} | total = $((singlet[H] + singlet[T]))"
 echo "H % = $(( (singlet[H] * 100 )/ (singlet[H] + singlet[T]) ))"
 echo "T % = $(( (singlet[T] * 100 )/ (singlet[H] + singlet[T]) ))"
 }
-
-#singletheadTailGenerate
 
 function doubletheadTailGenerate(){
 echo "------Doublet Combination-------"
@@ -48,16 +47,15 @@ echo "------Doublet Combination-------"
        		fi
 	done
 dtotal=$((doublet[HH] + doublet[HT] + doublet[TH] + doublet[TT]))
-echo "${doublet[@]} total = $dtotal"
+echo "${doublet[@]} | total = $dtotal"
 echo "HH % = $(( (${doublet[HH]} * 100 ) / $dtotal ))"
 echo "HT % = $(( (${doublet[HT]} * 100 ) / $dtotal))"
 echo "TH % = $(( (${doublet[TH]} * 100 ) / $dtotal))"
 echo "TT % = $(( (${doublet[TT]} * 100 ) / $dtotal))"
 }
-#doubletheadTailGenerate
 
 function tripletheadTailGenerate(){
-echo "------Doublet Combination-------"
+echo "------Triplet Combination-------"
 	while [ ${triplet[HHH]} -ne 21 -a ${triplet[HHT]} -ne 21 -a ${triplet[HTH]} -ne 21 -a ${triplet[THH]} -ne 21  -a ${triplet[TTH]} -ne 21  -a ${triplet[THT]} -ne 21  -a ${triplet[HTT]} -ne 21  -a ${triplet[TTT]} -ne 21 ]
 	do
 		rn1=$((RANDOM%2))
@@ -90,7 +88,7 @@ echo "------Doublet Combination-------"
        		fi
 	done
 ttotal=$((triplet[HHH] + triplet[HHT] + triplet[HTH] + triplet[THH] + triplet[TTH] + triplet[THT] + triplet[HTT] + triplet[TTT]))
-echo "${triplet[@]} total = $ttotal"
+echo "${triplet[@]} | total = $ttotal"
 echo "HHH % = $(( (${triplet[HHH]} * 100 ) / $ttotal))"
 echo "HHT % = $(( (${triplet[HHT]} * 100 ) / $ttotal))"
 echo "HTH % = $(( (${triplet[HTH]} * 100 ) / $ttotal))"
@@ -100,5 +98,60 @@ echo "THT % = $(( (${triplet[THT]} * 100 ) / $ttotal))"
 echo "HTT % = $(( (${triplet[HTT]} * 100 ) / $ttotal))"
 echo "TTT % = $(( (${triplet[TTT]} * 100 ) / $ttotal))"
 }
-tripletheadTailGenerate
 
+function sortCombination(){
+	sortedsinglet=`for num1 in ${!singlet[@]}
+	do
+		echo -e ${singlet[$num1]}
+	done | awk '{print $1}' | sort -n`
+	sorteddoublet=`for num2 in ${!doublet[@]}
+	do
+		echo -e ${doublet[$num2]}
+	done | awk '{print $1}' | sort -n`	
+	sortedtriplet=`for num3 in ${!triplet[@]}
+	do
+		echo -e ${triplet[$num3]}
+	done | awk '{print $1}' | sort -n`
+
+echo "-----------Sorted-------------"
+echo "sorted singlet : " $sortedsinglet
+echo "sorted doublet : " $sorteddoublet
+echo "sorted triplet : " $sortedtriplet
+}
+
+function getWinner(){
+winnersinglet=''
+winnerdoublet=''
+winnertriplet=''
+	for num1 in ${!singlet[@]}
+	do
+		if [ ${singlet[$num1]} -eq 21 ]
+		then
+			winnersinglet=$num1
+		fi
+	done
+	for num2 in ${!doublet[@]}
+	do
+		if [ ${doublet[$num2]} -eq 21 ]
+		then
+			winnerdoublet=$num2
+		fi		
+	done
+	for num3 in ${!triplet[@]}
+	do
+		if [ ${triplet[$num3]} -eq 21 ]
+		then
+			winnertriplet=$num3
+		fi
+	done
+echo "-----------Winners-------------"
+echo "Singlet Winner : $winnersinglet"
+echo "Doublet Winner : $winnerdoublet"
+echo "Triplet Winner : $winnertriplet"
+}
+
+singletheadTailGenerate
+doubletheadTailGenerate
+tripletheadTailGenerate
+sortCombination
+getWinner
